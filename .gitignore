@@ -1,0 +1,50 @@
+# Compiled Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Compiled Static libraries
+*.a
+*.lib
+
+# Compiled Dynamic libraries
+*.so
+*.dll
+*.dylib
+
+# Compiled executables
+*.exe
+*.out
+*.app
+
+# Generated files
+*.d
+*.dep
+*.bak
+*.tmp
+*.log
+*.swp
+*.swo
+
+# IDE files
+.vscode/
+*.code-workspace
+*.sln
+*.suo
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.cbp
+*.layout
+*.workspace
+*.cproject
+*.project
+*.settings/
+*.tmproj
+
+# Dependency directories
+bin/
+lib/
+
+build/

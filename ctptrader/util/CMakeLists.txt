@@ -1,0 +1,14 @@
+set(LIB_NAME utilLib)
+
+add_library(${LIB_NAME} STATIC
+    channel.cpp
+    csvReader.cpp
+    csvWriter.cpp
+)
+
+target_link_libraries(${LIB_NAME} PRIVATE
+    boost_system
+    boost_thread
+    ssl
+    crypto
+)
