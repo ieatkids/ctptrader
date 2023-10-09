@@ -10,7 +10,7 @@
 #include <service/dataService.hpp>
 #include <util/channel.hpp>
 
-namespace ctptrader::ctpMG {
+namespace ctptrader::app {
 
 class Spi : public CThostFtdcMdSpi {
 public:
@@ -59,7 +59,7 @@ private:
   const std::string user_id_;
   const std::string password_;
   const std::vector<std::string> instruments_;
-  util::ShmSpscWriter<base::Depth, 1024> tx_;
+  util::ShmSpscWriter<base::Msg, 1024> tx_;
   int request_id_{0};
 };
 

@@ -1,5 +1,5 @@
 add_subdirectory(base)
 add_subdirectory(util)
 add_subdirectory(service)
-add_subdirectory(gateway)
+add_subdirectory(app)
 add_subdirectory(trader)

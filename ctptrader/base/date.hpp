@@ -16,7 +16,7 @@ enum DayOfWeek : int {
   Saturday = 6
 };
 
-/// @brief 日期类
+/// @brief Date class
 class Date {
 public:
   Date() : yyyymmdd_(0) {}

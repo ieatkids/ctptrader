@@ -1,6 +1,7 @@
 #pragma once
 
 #include <compare>
+#include <cstring>
 #include <string>
 #include <time.h>
 
@@ -146,6 +147,13 @@ public:
   __attribute__((__always_inline__)) static Timestamp
   FromSeconds(time_t seconds) {
     return Timestamp{seconds, 0};
+  }
+
+  static Timestamp FromString(std::string_view s) {
+    struct tm tm;
+    memset(&tm, 0, sizeof(tm));
+    strptime(s.data(), "%Y-%m-%d %H:%M:%S", &tm);
+    return Timestamp::FromSeconds(mktime(&tm));
   }
 } __attribute__((packed));
 

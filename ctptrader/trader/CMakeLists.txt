@@ -8,7 +8,7 @@ target_link_libraries(${BIN_NAME} PRIVATE
     baseLib
     utilLib
     serviceLib
-    gatewayLib
+    appLib
     ${THIRDPARTY}/ctp/lib/libthostmduserapi_se.so
     ${THIRDPARTY}/ctp/lib/libthosttraderapi_se.so
 )

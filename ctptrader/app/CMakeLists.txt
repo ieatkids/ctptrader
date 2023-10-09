@@ -1,8 +1,9 @@
-set(LIB_NAME gatewayLib)
+set(LIB_NAME appLib)
 
 include_directories(${THIRDPARTY}/ctp/include)
 
 add_library(${LIB_NAME} STATIC
+    stgManager.cpp
     ctpMG.cpp
 )
 
@@ -14,4 +15,3 @@ target_link_libraries(${LIB_NAME}
     ${THIRDPARTY}/ctp/lib/libthosttraderapi_se.so
     ${THIRDPARTY}/fmt/lib/libfmt.a
 )
-

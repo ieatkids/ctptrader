@@ -1,8 +1,13 @@
 #include <unistd.h>
 
+#include <variant>
+
 #include <toml.hpp>
 
-#include <gateway/ctpMG.hpp>
+#include <app/ctpMG.hpp>
+#include <app/stgManager.hpp>
+#include <base/msg.hpp>
+#include <base/stg.hpp>
 
 using namespace ctptrader;
 
@@ -18,8 +23,22 @@ int main(int argc, char *argv[]) {
               << std::endl;
     return 1;
   }
-
   auto config = res.as_table();
-  ctpMG::Start(*config);
+  auto data_folder = (*config)["data_folder"].value<std::string>();
+  if (!data_folder.has_value()) {
+    std::cout << "Error: data_folder is not specified" << std::endl;
+    return 1;
+  }
+  DataService().Init(data_folder.value());
+
+  auto pid = fork();
+  if (pid == 0) {
+    app::StgManager sm("shm_ctptrader_md");
+    sm.Init(*config);
+    sm.Start();
+    return 0;
+  } else {
+    // app::ctpMG::Start(*config);
+  }
   return 0;
 }
