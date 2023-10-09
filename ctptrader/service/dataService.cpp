@@ -4,9 +4,7 @@
 namespace ctptrader::service {
 
 template <> bool RefCenter<Underlying>::FromCSV(std::string_view path) {
-  util::CsvReader<base::ID, std::string, base::Exchange, base::Mutiple,
-                  base::Volume, base::Price>
-      reader(path);
+  util::CsvReader<6> reader(path);
   Underlying u;
   while (reader.ReadRow(u.id_, u.name_, u.exchange_, u.multiple_, u.lot_size_,
                         u.tick_size_)) {
@@ -21,9 +19,7 @@ template <> bool RefCenter<Underlying>::FromCSV(std::string_view path) {
 }
 
 template <> bool RefCenter<Instrument>::FromCSV(std::string_view path) {
-  util::CsvReader<base::ID, std::string, std::string, base::InstrumentType,
-                  base::Date, base::Date, base::Ratio, base::Ratio>
-      reader(path);
+  util::CsvReader<8> reader(path);
   Instrument i;
   while (reader.ReadRow(i.id_, i.name_, i.underlying_, i.type_, i.create_date_,
                         i.expire_date_, i.long_margin_ratio_,
@@ -39,7 +35,7 @@ template <> bool RefCenter<Instrument>::FromCSV(std::string_view path) {
 }
 
 template <> bool RefCenter<CalendarDate>::FromCSV(std::string_view path) {
-  util::CsvReader<base::ID, int, bool, int, int> reader(path);
+  util::CsvReader<5> reader(path);
   struct Row {
     base::ID id_;
     int date_;
