@@ -4,6 +4,7 @@ add_library(${LIB_NAME} STATIC
     channel.cpp
     csvReader.cpp
     csvWriter.cpp
+    httpClient.cpp
 )
 
 target_link_libraries(${LIB_NAME} PRIVATE
@@ -11,4 +12,5 @@ target_link_libraries(${LIB_NAME} PRIVATE
     boost_thread
     ssl
     crypto
+    ${CURL_LIBRARIES}
 )

@@ -20,7 +20,7 @@ public:
       : api_(api), broker_id_(std::move(broker_id)),
         user_id_(std::move(user_id)), password_(std::move(password)),
         instruments_(std::move(instruments)), tx_(shm_addr) {}
-  ~Spi() = default;
+  ~Spi() {}
 
   void OnFrontConnected() override;
   void OnFrontDisconnected(int nReason) override;
@@ -63,30 +63,53 @@ private:
   int request_id_{0};
 };
 
-inline void Start(const toml::table &config) {
-  auto data_folder = config["data_folder"].value<std::string>();
-  auto broker_id = config["broker_id"].value<std::string>();
-  auto user_id = config["user_id"].value<std::string>();
-  auto password = config["password"].value<std::string>();
-  auto market_front = config["market_front"].value<std::string>();
-  auto instruments = config["instruments"].as_array();
-  std::vector<std::string> ins;
-  for (auto &&ele : *instruments) {
-    auto v = ele.value<std::string>();
-    if (v.has_value()) {
-      ins.emplace_back(v.value());
-    }
-  }
-  LOG_INFO("CtpMG::Start");
-  auto address = fmt::format("tcp://{}", market_front.value());
-  auto *api = CThostFtdcMdApi::CreateFtdcMdApi();
-  Spi spi(api, std::move(broker_id.value()), std::move(user_id.value()),
-          std::move(password.value()), "shm_ctptrader_md", ins);
-  api->RegisterSpi(&spi);
-  api->RegisterFront((char *)address.c_str());
-  api->Init();
-  api->Join();
-  api->Release();
-}
+class CtpMG {
+public:
+  CtpMG(std::string_view channel) : channel_(channel) {}
+  ~CtpMG() {}
 
-} // namespace ctptrader::ctpMG
+  bool Init(const toml::table &config) {
+    broker_id_ = config["broker_id"].value_or<std::string>("");
+    user_id_ = config["user_id"].value_or<std::string>("");
+    password_ = config["password"].value_or<std::string>("");
+    auto market_front = config["market_front"].value_or<std::string>("");
+    auto instruments = config["instruments"].as_array();
+    std::vector<std::string> ins;
+    for (auto &&ele : *instruments) {
+      auto v = ele.value<std::string>();
+      if (v.has_value()) {
+        ins.emplace_back(v.value());
+      }
+    }
+    if (broker_id_.empty() || user_id_.empty() || password_.empty() ||
+        market_front.empty() || ins.empty()) {
+      std::cerr << "Error: broker_id, user_id, password, market_front, "
+                   "instruments must be specified"
+                << std::endl;
+      return false;
+    }
+    front_address_ = fmt::format("tcp://{}", market_front);
+    return true;
+  }
+
+  void Start() {
+    auto *api = CThostFtdcMdApi::CreateFtdcMdApi();
+    Spi spi(api, std::move(broker_id_), std::move(user_id_),
+            std::move(password_), channel_, std::move(instruments_));
+    api->RegisterSpi(&spi);
+    api->RegisterFront((char *)front_address_.c_str());
+    api->Init();
+    api->Join();
+    api->Release();
+  }
+
+private:
+  const std::string channel_;
+  std::string broker_id_;
+  std::string user_id_;
+  std::string password_;
+  std::vector<std::string> instruments_;
+  std::string front_address_;
+};
+
+} // namespace ctptrader::app

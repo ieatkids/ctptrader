@@ -29,16 +29,19 @@ int main(int argc, char *argv[]) {
     std::cout << "Error: data_folder is not specified" << std::endl;
     return 1;
   }
-  DataService().Init(data_folder.value());
 
   auto pid = fork();
   if (pid == 0) {
+    DataService().Init(data_folder.value());
     app::StgManager sm("shm_ctptrader_md");
     sm.Init(*config);
     sm.Start();
     return 0;
   } else {
-    // app::ctpMG::Start(*config);
+    DataService().Init(data_folder.value());
+    app::CtpMG mg("shm_ctptrader_md");
+    mg.Init(*config);
+    mg.Start();
   }
   return 0;
 }

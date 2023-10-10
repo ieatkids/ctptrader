@@ -12,3 +12,5 @@ target_link_libraries(${BIN_NAME} PRIVATE
     ${THIRDPARTY}/ctp/lib/libthostmduserapi_se.so
     ${THIRDPARTY}/ctp/lib/libthosttraderapi_se.so
 )
+
+install(TARGETS ${BIN_NAME} DESTINATION ${APP_BIN_DIR})
